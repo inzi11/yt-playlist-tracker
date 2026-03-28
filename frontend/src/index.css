@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+
+@theme {
+--c-bg: #0a0a14; 
+--c-sidebar: #0f0f1c; 
+--c-cards: #15151f; 
+--c-border-glow: rgba(80,80,140,0.88);
+--c-inputs: #1c1c2a;
+--c-hover: #22223a; 
+
+
+--c-accent: #c45c5c;
+--c-accentH: #a94e4e;
+--c-accent-sub: #22223a;
+--c-teal: #4a9e8e;
+--c-purple: #7c6fa0;
+--c-amber: #b08a3e;
+--c-green: #4a8c5c;
+--c-blue: #4a78b0;
+
+--c-text: #ddd8f0; 
+--c-textS:rgba(221, 216, 240, 0.55); 
+--c-textM: #DDD8F054; 
+
+--c-border: rgba(255,255,255,.07); 
+--c-borderH: rgba(255,255,255,.12); 
+--c-borderS: rgba(255,255,255,.18); 
+--c-accentB:  rgba(196,92,92,.26); 
+--c-bookmarkB: rgba(176,138,62,.22); 
+--c-notesB: rgba(124,111,160,.28); 
+
+--text-title: 20px; 
+--text-md: 13px;
+--text-sm: 12px; 
+--text-body: 14px; 
+--text-micro: 11px;
+--text-stat: 21px;  
+
+--light-bg: #f0eff4; 
+--light-bg2: #e9e8ee; 
+--light-surf: #ffffff; 
+--light-surf2:#f5f4f9;
+--light-surf3: #edeaf4; 
+
+--light-tx:#1a1828; 
+--light-tx2: rgba(26,24,40,0.55);
+--light-tx3:rgba(26,24,40,0.32); 
+--light-txD: #ddd8f0;
+
+/* font */
+  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "Instrument Serif", serif;
+
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  .dark {
+    --color-background: #0f172a;
+    --color-foreground: #f8fafc;
+  }
+  body{
+    font-family: var(--font-sans);
+  }
+
+}
+
+
+
