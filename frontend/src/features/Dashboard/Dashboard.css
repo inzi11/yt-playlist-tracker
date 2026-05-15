@@ -1,0 +1,12 @@
+.card-effect {
+  position: relative;
+  width: 18rem;
+}
+
+.report-card {
+  transition: all 0.3s ease;
+}
+
+.report-card:nth-child(n) {
+  transform: translateX(calc(var(--i) * 10px));
+}

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import NavList from "./NavList";
+import NavList from "../../ui/NavList/NavList";
 
 
 
 interface NavItem {
   label: string;
   badge?: number | string;
+  route?: string;
   count?: number;
   isActive?: boolean;
   accentDot?: boolean; // red dot variant
@@ -22,10 +23,10 @@ const SECTIONS: NavSection[] = [
   {
     title: "Main",
     items: [
-      { label: "Dashboard", },
-      { label: "Analytics" },
-      { label: "Explore" },
-      { label: "Notes", badge: 8 },
+      { label: "Dashboard", route : "/"},
+      { label: "Analytics", route: "analytics"},
+      { label: "Explore", route: "explore"},
+      { label: "Notes", badge: 8, route: "notes"},
     ],
   },
   {
@@ -59,7 +60,7 @@ export default function Sidebar() {
   return (
     <>
       <aside
-        className="flex w-80 h-full shrink-0 flex-col items-center overflow-y-auto overflow-x-hidden py-5 px-4 font-sans"
+        className="flex w-80 h-full shrink-0 flex-col items-center overflow-y-auto overflow-x-hidden py-5 px-4"
         style={{
           background: "var(--c-sidebar)",
           borderRight: "1px solid var(--c-border)",
@@ -155,6 +156,7 @@ export default function Sidebar() {
               section={section}
               activeItem={activeItem}
               onSelect={setActiveItem}
+              
             />
           ))}
         </div>

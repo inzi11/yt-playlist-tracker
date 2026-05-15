@@ -17,7 +17,10 @@ const PlaylistSchema = mongoose.Schema(
       type: String,
       default: "",
     },
-
+    category: {
+      type: String, 
+      default: "Not set"
+    }, 
     thumbnail: {
       default: {
         url: String,

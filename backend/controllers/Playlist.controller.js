@@ -4,8 +4,7 @@ import PlaylistService from "../services/Playlist.service.js";
 const importPlaylistDetailsFromYT = async (req, res, next) => {
 
     try {
-
-        const playlist = await PlaylistService.importPlaylist(req.body.url, req.user.id); 
+        const playlist = await PlaylistService.importPlaylist(req.body, req.user.id); 
         return res.status(201).json({ message: "Playlist added Succesfully", playlist });
     
     } catch (error) {

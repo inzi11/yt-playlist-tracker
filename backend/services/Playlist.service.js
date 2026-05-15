@@ -2,8 +2,10 @@ import PlaylistRepository from "../repository/Playlist.repository.js";
 import AppError from "../utils/appError.utils.js";
 import YoutubeService from "./Youtube.service.js"
 
-const importPlaylist = async (ytUrl, userId) => {
-    const playlistId = YoutubeService.getPlaylistId(ytUrl);
+
+// payload = {url, customTitle, category, daily goals, playback Speed}
+const importPlaylist = async (payload, userId) => {
+    const playlistId = YoutubeService.getPlaylistId(payload?.url);
 
     const isPlaylistExists = await PlaylistRepository.checkPlaylistExistance(playlistId, userId);
 
@@ -29,8 +31,9 @@ const importPlaylist = async (ytUrl, userId) => {
     const playlistPayload = {
         userId: userId,
          youtubePlaylistId: playlistId,
-         title: playlistDetails?.snippet.title, 
-         itemCount: playlistDetails?.contentDetails.itemCount,
+         title: payload.customTitle || playlistDetails?.snippet.title, 
+        itemCount: playlistDetails?.contentDetails.itemCount,
+        category: payload.category, 
          thumbnail: playlistDetails?.snippet.thumbnails,
         description: playlistDetails?.snippet.localized.description
     }

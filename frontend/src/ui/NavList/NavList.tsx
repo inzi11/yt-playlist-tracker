@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 
 interface NavItem {
   label: string;
   badge?: number | string;
+  route?: string; 
   count?: number;
   isActive?: boolean;
   accentDot?: boolean; // red dot variant
@@ -20,6 +22,16 @@ interface NavListProps {
 
 function NavList({ section, activeItem, onSelect }: NavListProps) {
 
+
+  const navigate = useNavigate(); 
+
+  const handleSectionSelection = (item: NavItem) => {
+    onSelect(item.label);
+    if (item.route) {
+      navigate(item.route)
+    }
+  }
+
     
   return (
     <div className="flex flex-col gap-0.5">
@@ -36,8 +48,8 @@ function NavList({ section, activeItem, onSelect }: NavListProps) {
         return (
           <button
             key={item.label}
-            onClick={() => onSelect(item.label)}
-            className="group flex w-full items-center justify-between rounded-lg px-3 py-[9px] text-sm font-medium transition-all duration-150"
+            onClick={() => handleSectionSelection(item)}
+            className="group flex w-full items-center justify-between rounded-lg px-3 py-2.25 text-body font-medium transition-all duration-150"
             style={{
               background: isActive ? "var(--c-hover)" : "transparent",
               color: isActive ? "var(--c-text)" : "var(--c-textS)",
@@ -65,7 +77,7 @@ function NavList({ section, activeItem, onSelect }: NavListProps) {
             <span className="flex items-center gap-2.5">
               {/* Dot indicator */}
               <span
-                className="h-[7px] w-[7px] rounded-full flex-shrink-0"
+                className="h-1.75 w-1.75 rounded-full shrink-0"
                 style={{
                   background: item.accentDot
                     ? "var(--c-accent)"
@@ -84,7 +96,7 @@ function NavList({ section, activeItem, onSelect }: NavListProps) {
             {/* Badge (notifications) */}
             {item.badge != null && (
               <span
-                className="flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[11px] font-semibold"
+                className="flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-micro font-semibold"
                 style={{
                   background: "var(--c-accent)",
                   color: "#fff",

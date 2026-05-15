@@ -1,14 +1,19 @@
-import React from "react";
 
-export default function AddPlaylistModal() {
+type handleOpenPlaylistType = {
+  handleOpenPlaylist: (value: true | false) => void; 
+}
+
+
+export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlaylistType) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50 ease-in-out duration-200 transition-all " onClick={()=> handleOpenPlaylist(false)}>
       <div
         className="w-[520px] rounded-2xl p-6 shadow-xl"
         style={{
           background: "var(--light-surf)",
           border: "1px solid var(--c-border)",
         }}
+        onClick={(e)=> e.stopPropagation()}
       >
         {/* Title */}
         <h2
@@ -124,6 +129,8 @@ export default function AddPlaylistModal() {
               border: "1px solid var(--c-border)",
               color: "var(--light-tx)",
             }}
+
+            onClick={()=>handleOpenPlaylist(false)}
           >
             Cancel
           </button>
@@ -134,6 +141,7 @@ export default function AddPlaylistModal() {
               background: "var(--c-accent)",
               color: "#fff",
             }}
+            onClick={()=> handleOpenPlaylist(false)}
           >
             Add playlist →
           </button>

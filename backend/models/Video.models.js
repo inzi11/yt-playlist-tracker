@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { type } from "node:os";
 
 const videoSchema = new mongoose.Schema(
   {
@@ -33,6 +34,15 @@ const videoSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    playbackSpeed: {
+      type: "string", 
+      default: "1"
+    },
+    dailyGoals: {
+      type: String, 
+      default: "1.5"
+    }
+    ,
 
     notes: {
       type: String,
