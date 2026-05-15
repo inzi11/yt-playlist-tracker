@@ -1,11 +1,11 @@
-import SharableAuth from "../../features/Auth/SharableAuth"
+import SharableAuth from "../features/Auth/SharableAuth"
 
 
 const Auth = () => {
-
-  
   return (
+    <>
     <SharableAuth />
+    </>
   )
 }
 

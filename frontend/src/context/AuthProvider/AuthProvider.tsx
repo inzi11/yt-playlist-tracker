@@ -1,4 +1,4 @@
-import {useState } from "react"
+import {useContext, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { AuthContext } from "./AuthContext";
 import type { ReactNode } from "react";
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: Props) => {
     const [isLoggedIn, setIsLoggedIn] = useState(()=> getInitialAuth().isLoggedIn);    
 
 
-    const login = (token: string) => {
+    const userLogin = (token: string) => {
     try {
         const decoded = jwtDecode<UserType>(token);
         localStorage.setItem("token", token);
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: Props) => {
     }
 };
     
-    const logout = () => {
+    const userLogout = () => {
         localStorage.removeItem("token");
         setUser(null); 
         setIsLoggedIn(false); 
@@ -65,8 +65,21 @@ export const AuthProvider = ({ children }: Props) => {
 
 
     return (
-        <AuthContext.Provider value={{ user, isLoggedIn, login, logout, }}>
+        <AuthContext.Provider value={{ user, isLoggedIn, userLogin, userLogout, }}>
             {children}
         </AuthContext.Provider>
     )
 }
+
+
+export const Auth = () => {
+  const context = useContext(AuthContext); 
+
+  if (!context) {
+    throw new Error("Error while loading the auth context"); 
+  }
+
+  return context;
+}
+
+

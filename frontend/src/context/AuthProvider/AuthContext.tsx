@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext} from "react";
 
 
 type UserType = {
@@ -11,8 +11,11 @@ type UserType = {
 type AuthProviderType = {
     user: UserType | null;
     isLoggedIn: boolean;
-    login: (token: string) => void; 
-    logout: () => void;
+    userLogin: (token: string) => void; 
+    userLogout: () => void;
 }
 
+
 export const AuthContext = createContext<AuthProviderType | null>(null); 
+
+

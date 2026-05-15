@@ -31,7 +31,7 @@ const SideSignup = () => {
   ];
 
   return (
-    <div className="relative w-105 mx-auto rounded-r-xl">
+    <div className="relative w-105 mx-auto rounded-r-xl ">
       <div className="relative bg-(--c-cards) border w-full border-(--c-border)  p-8 shadow-2xl shadow-black/60 overflow-hidden text-(--c-text) " >
 
       <section className="py-3 flex flex-col gap-8 ">

@@ -1,19 +1,12 @@
-import AddPlaylistModal from "./ui/addPlaylistForm/AddPlaylistModal"
-import Navbar from "./ui/navbar/navbar"
-import Sidebar from "./ui/SideBar/Sidebar"
+import { BrowserRouter } from "react-router-dom"
+import AllRoutes from "./routes/AllRoutes"
 
 function App() {
   return (
-    <div className="h-screen" >
-      <div className="h-15">
-      <Navbar />
-      </div>
+    <BrowserRouter >
+      <AllRoutes />
+    </BrowserRouter>
 
-      <div className="h-[calc(100%-60px)] ">
-        <Sidebar />
-      </div>
-
-    </div>
   )
 }
 
