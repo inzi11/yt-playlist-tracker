@@ -24,9 +24,10 @@ const SECTIONS: NavSection[] = [
     title: "Main",
     items: [
       { label: "Dashboard", route : "/"},
+      { label: "Your Playlists", route: "playlists"},
       { label: "Analytics", route: "analytics"},
       { label: "Explore", route: "explore"},
-      { label: "Notes", badge: 8, route: "notes"},
+      { label: "Notes", route: "notes"},
     ],
   },
   {

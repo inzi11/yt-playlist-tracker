@@ -1,47 +1,27 @@
-import axios, { AxiosError } from "axios"; 
+import ApiAuth from "../services";
 
 
-interface LoginPayload {
+export interface LoginPayload {
   email: string;
   password: string;
 }
 
-interface SignupPayload {
-  name: string;
+export interface SignupPayload {
+  username: string;
   email: string;
   password: string;
   phone?: string;
 }
 
 class AuthRoute{
-    private Base_URL = "http://localhost:3000/api/users"
-    
-    private handleError(error: unknown, fallback?: string) {
-        if (error instanceof AxiosError) {
-            throw new Error(error.response?.data?.message || fallback); 
-        }
-        throw new Error("Unexpected Err")
-    }
-
+    private api = new ApiAuth()
 
     async login(payload: LoginPayload) {
-        try {
-        const res = await axios.post(`${this.Base_URL}/login`, payload); 
-        return res.data;
-        } catch (error: unknown) {
-        this.handleError(error, "login Error")
-}
-      
+        return this.api.post("/users/login", payload);
     }
 
     async signup(payload: SignupPayload) {
-        try {
-             const res = await axios.post(`${this.Base_URL}/signup`, payload); 
-            return res.data; 
-            
-        } catch (error) {
-            this.handleError(error, "signup error");
-        }  
+        return this.api.post("/users/signup", payload);
     }
 
 }

@@ -4,17 +4,20 @@ import { Avatar } from "@mui/material";
 import ProdLogo from "../../ui/ProdLogo/ProdLogo";
 import CustomToggle from "../../ui/customToggle/CustomToggle";
 import AddPlaylistModal from "../../ui/addPlaylistForm/AddPlaylistModal";
-
+import { useAppDispatch } from "@/store/hooks";
+import { addPlaylist } from "@/store/slice/PlaylistSlice";
 
 const Navbar = () => {
 
   const [ligthMode, setLightMode] = useState(true);// note this state will come for the context
 
-  const [addPlaylist, setAddPlaylist] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   console.log(ligthMode);
 
-  const handleOpenPlaylist = (option: true | false) =>{
-    setAddPlaylist(option); 
+  const dispatch = useAppDispatch(); 
+
+  const handlePlaylistImport = (playlistData: any) => {
+    dispatch(addPlaylist(playlistData)); 
   }
 
   return (
@@ -32,14 +35,14 @@ const Navbar = () => {
         <CustomToggle toggleOptions={{first: "Light" , second: "Dark"}} handleToggle={setLightMode} isActive={ligthMode} />
         <button
           className="bg-(--c-accent) hover:bg-(--c-accentH) duration-200 ease-in-out text-sm h-fit py-1.75 rounded-lg px-2 text-(--light-surf) font-semibold"
-          onClick={() => handleOpenPlaylist(true)}
+          onClick={() => setOpenModal(true)}
         >+ Add playlist</button>
         <Avatar sx={{background:"linear-gradient(to right, #b84f4f, #6b5f96)", width: "32px", height:"32px"}}>H</Avatar>
       </div>
       </div>
       
-      {addPlaylist && 
-        <AddPlaylistModal handleOpenPlaylist={handleOpenPlaylist} />
+      {openModal && 
+        <AddPlaylistModal handlePlaylistImport={handlePlaylistImport} setOpenModal ={setOpenModal} />
       }
     </>
   )

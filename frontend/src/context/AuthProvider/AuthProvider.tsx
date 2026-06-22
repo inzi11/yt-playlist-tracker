@@ -1,19 +1,15 @@
-import {useContext, useState } from "react"
-import { jwtDecode } from "jwt-decode"
+import { useContext, useState, type Dispatch, type SetStateAction } from "react";
 import { AuthContext } from "./AuthContext";
 import type { ReactNode } from "react";
-
-type UserType = {
-  id: string;
-  email: string;
-  role: string;
-  exp?: number;
-};
+import AuthRoute, { type LoginPayload, type SignupPayload } from "../../services/AuthService/AuthService";
+import type { UserType } from "./AuthContext";
+import {jwtDecode} from "jwt-decode"
 
 type Props = {
-    children: ReactNode; 
-}
+  children: ReactNode;
+};
 
+const authRoute = new AuthRoute();
 
 const getInitialAuth = (): {
   user: UserType | null;
@@ -38,48 +34,66 @@ const getInitialAuth = (): {
   }
 };
 
+const setTokenAndUser = (
+  token: string,
+  setUser: Dispatch<SetStateAction<UserType | null>>,
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>,
+) => {
+  const decoded = jwtDecode<UserType>(token);
+  localStorage.setItem("token", token);
+  setUser(decoded);
+  setIsLoggedIn(true);
+};
 
 export const AuthProvider = ({ children }: Props) => {
+  const initialAuth = getInitialAuth();
+  const [user, setUser] = useState<UserType | null>(() => initialAuth.user);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => initialAuth.isLoggedIn);
 
-  
-    const [user, setUser] = useState < UserType | null>(() => getInitialAuth().user);
-    const [isLoggedIn, setIsLoggedIn] = useState(()=> getInitialAuth().isLoggedIn);    
-
-
-    const userLogin = (token: string) => {
+  const userLogin = async (payload: LoginPayload) => {
     try {
-        const decoded = jwtDecode<UserType>(token);
-        localStorage.setItem("token", token);
-        setUser(decoded);
-    } catch {
-        console.error("Invalid token");
+      const res = await authRoute.login(payload);
+      const token = (res as any)?.token ?? (res as any)?.data?.token;
+      if (!token) {
+        throw new Error("Login response did not include a token");
+      }
+      setTokenAndUser(token, setUser, setIsLoggedIn);
+    } catch (error) {
+      console.error("Login failed", error);
+      throw error;
     }
+  };
+
+  const userSignup = async (payload: SignupPayload) => {
+    try {
+      await authRoute.signup(payload);
+    } catch (error) {
+      console.error("Signup failed", error);
+      throw error;
+    }
+  };
+
+  const userLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    setIsLoggedIn(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, isLoggedIn, userLogin, userSignup, userLogout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
-    
-    const userLogout = () => {
-        localStorage.removeItem("token");
-        setUser(null); 
-        setIsLoggedIn(false); 
-    }
-
-
-
-    return (
-        <AuthContext.Provider value={{ user, isLoggedIn, userLogin, userLogout, }}>
-            {children}
-        </AuthContext.Provider>
-    )
-}
-
 
 export const Auth = () => {
-  const context = useContext(AuthContext); 
+  const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("Error while loading the auth context"); 
+    throw new Error("Error while loading the auth context");
   }
 
   return context;
-}
+};
 
 

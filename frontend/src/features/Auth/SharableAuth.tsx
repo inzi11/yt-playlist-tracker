@@ -1,24 +1,39 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SideSignup from "./SideCards/SideSignup";
 import SideSignin from "./SideCards/SideSignin";
 import AuthForm from "../../context/SharableForm";
 import CustomToggle from "../../ui/customToggle/CustomToggle";
-import { login, signup } from "./AuthSlice";
-import { useAppDispatch } from "../../store/hooks";
+import { Auth } from "../../context/AuthProvider/AuthProvider";
+
 const SharableAuth = () => {
   const [isNewUser, setIsNewUser] = useState(true);
-  
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { userLogin, userSignup } = Auth();
 
-  const handleAuth = (payload: Record<string, string>) => {
-    console.log("here's the payload im sending", payload);
-    if (isNewUser) {
-      // signup
-      dispatch(signup({ name: payload.name, password: payload.password, email: payload.email }));
-    } else {
-      dispatch(login({ password: payload.password, email: payload.email }));
+  const handleAuth = async (data: Record<string, string>) => {
+    try {
+      if (isNewUser) {
+        await userSignup({
+          username: `${data.firstName ?? ""} ${data.lastName ?? ""}`.trim(),
+          email: data.email,
+          password: data.password,
+        });
+        setIsNewUser(false);
+        return;
+      }
+
+      await userLogin({
+        email: data.email,
+        password: data.password,
+      });
+
+      navigate("/");
+    } catch (error) {
+      console.error("Auth error", error);
     }
-  }
+  };
+
 
 
 

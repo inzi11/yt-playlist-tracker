@@ -20,16 +20,25 @@ app.get("/", (req, res) => {
 });
 
 // loading routes
-app.use("/api/users", userRoutes);
-app.use("/api/playlist", playlistRoutes);
-app.use("/api/videos", VideoRoutes);
+app.use("/api", userRoutes);
+app.use("/api", playlistRoutes);
+app.use("/api", VideoRoutes);
 
 
 // error middleware should be last
 app.use(errorHandler);
 
-connectDb();
+const startServer = async () => {
+  try {
+    await connectDb();
 
-app.listen(env.port, () => {
-  console.log(`Server running on port ${env.port}`);
-});
+    app.listen(env.port, () => {
+      console.log(`Server running on port ${env.port}`);
+    });
+
+  } catch (error) {
+    console.error("Failed to start server:", error);
+  }
+};
+
+startServer();

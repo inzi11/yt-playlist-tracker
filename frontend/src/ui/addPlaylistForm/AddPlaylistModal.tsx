@@ -1,12 +1,39 @@
+import { useState } from "react";
 
-type handleOpenPlaylistType = {
-  handleOpenPlaylist: (value: true | false) => void; 
+type AddPlaylistModalType = {
+  handlePlaylistImport: (val: Record<string, any>) => void; 
+  setOpenModal: (b: boolean) => void
+}
+
+export type playlistDataProp = {
+  playback: string; 
+  url: string; 
+  customName: string; 
+  category: string; 
+  dailyGoal: string 
+
 }
 
 
-export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlaylistType) {
+export default function AddPlaylistModal({ handlePlaylistImport, setOpenModal }: AddPlaylistModalType) {
+
+  const [playlistData, setPlaylistData] = useState<playlistDataProp>({
+    playback: "",
+    url: "",
+    customName: "",
+    category: "",
+    dailyGoal: "",
+  }); 
+
+  const handleChange = (e: any) => {
+
+    const { name, value } = e.target; 
+    setPlaylistData(prev => ({ ...prev, [name]: value }));
+  }
+
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50 ease-in-out duration-200 transition-all " onClick={()=> handleOpenPlaylist(false)}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50 ease-in-out duration-200 transition-all " onClick={() => setOpenModal(false)}>
       <div
         className="w-[520px] rounded-2xl p-6 shadow-xl"
         style={{
@@ -41,6 +68,9 @@ export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlayl
             type="text"
             placeholder="https://youtube.com/playlist?list=..."
             className="w-full rounded-lg px-3 py-2 text-[13px] outline-none"
+            name="url"
+            value={playlistData.url}
+            onChange={ handleChange}
             style={{
               background: "var(--light-surf2)",
               border: "1px solid var(--c-border)",
@@ -58,6 +88,9 @@ export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlayl
             <input
               placeholder="Auto-fetched"
               className="w-full rounded-lg px-3 py-2 text-[13px] outline-none"
+                name="customName"
+            value={playlistData.customName}
+            onChange={handleChange}
               style={{
                 background: "var(--light-surf2)",
                 border: "1px solid var(--c-border)",
@@ -73,6 +106,9 @@ export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlayl
             <input
               placeholder="e.g. Design"
               className="w-full rounded-lg px-3 py-2 text-[13px] outline-none"
+                name="category"
+            value={playlistData.category}
+            onChange={handleChange}
               style={{
                 background: "var(--light-surf2)",
                 border: "1px solid var(--c-border)",
@@ -91,6 +127,9 @@ export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlayl
             <input
               defaultValue="1"
               className="w-full rounded-lg px-3 py-2 text-[13px] outline-none"
+                name="dailyGoal"
+            value={playlistData.dailyGoal}
+            onChange={handleChange}
               style={{
                 background: "var(--light-surf2)",
                 border: "1px solid var(--c-border)",
@@ -106,6 +145,9 @@ export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlayl
             <select
               defaultValue="1.5x"
               className="w-full rounded-lg px-3 py-2 text-[13px] outline-none"
+                name="playback"
+            value={playlistData.playback}
+            onChange={handleChange}
               style={{
                 background: "var(--light-surf2)",
                 border: "1px solid var(--c-border)",
@@ -130,7 +172,7 @@ export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlayl
               color: "var(--light-tx)",
             }}
 
-            onClick={()=>handleOpenPlaylist(false)}
+            onClick={()=>setOpenModal(false)}
           >
             Cancel
           </button>
@@ -141,7 +183,7 @@ export default function AddPlaylistModal({ handleOpenPlaylist }: handleOpenPlayl
               background: "var(--c-accent)",
               color: "#fff",
             }}
-            onClick={()=> handleOpenPlaylist(false)}
+            onClick={()=> handlePlaylistImport(playlistData)}
           >
             Add playlist →
           </button>
