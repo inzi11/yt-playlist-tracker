@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavList from "../../ui/NavList/NavList";
-
-
+import ApiModule from "@/services/module/ApiModule";
 
 interface NavItem {
   label: string;
@@ -17,17 +16,15 @@ interface NavSection {
   items: NavItem[];
 }
 
-
-
 const SECTIONS: NavSection[] = [
   {
     title: "Main",
     items: [
-      { label: "Dashboard", route : "/"},
-      { label: "Your Playlists", route: "playlists"},
-      { label: "Analytics", route: "analytics"},
-      { label: "Explore", route: "explore"},
-      { label: "Notes", route: "notes"},
+      { label: "Dashboard", route: "/" },
+      { label: "Your Playlists", route: "playlists" },
+      { label: "Analytics", route: "analytics" },
+      { label: "Explore", route: "explore" },
+      { label: "Notes", route: "notes" },
     ],
   },
   {
@@ -41,7 +38,7 @@ const SECTIONS: NavSection[] = [
   {
     title: "Categories",
     items: [
-      { label: "Programming",},
+      { label: "Programming" },
       { label: "Design" },
       { label: "Business" },
       { label: "Science" },
@@ -52,6 +49,14 @@ const SECTIONS: NavSection[] = [
 export default function Sidebar() {
   const [activeItem, setActiveItem] = useState("Dashboard");
 
+  useEffect(() => {
+    (async () => {
+      const res = await ApiModule.getUserStreak();
+
+      console.log(res);
+    })();
+  }, []);
+
   const stats = [
     { value: "7", label: "Lists" },
     { value: "84", label: "Videos" },
@@ -61,17 +66,20 @@ export default function Sidebar() {
   return (
     <>
       <aside
-        className="flex w-80 h-full shrink-0 flex-col items-center overflow-y-auto overflow-x-hidden py-5 px-4"
+        className="flex w-80 h-full shrink-0 flex-col items-center overflow-y-auto  overflow-x-hidden py-5 px-4"
         style={{
           background: "var(--c-sidebar)",
           borderRight: "1px solid var(--c-border)",
-          scrollbarWidth: "thin",
+          scrollbarWidth: "none",
           scrollbarColor: "var[--c-border]",
         }}
       >
         <div
           className="mx-3 mb-4 w-full flex items-center gap-3 rounded-xl p-3"
-          style={{ background: "var(--c-cards)", border: "1px solid var(--c-border)" }}
+          style={{
+            background: "var(--c-cards)",
+            border: "1px solid var(--c-border)",
+          }}
         >
           {/* Avatar */}
           <div
@@ -101,10 +109,11 @@ export default function Sidebar() {
           </div>
         </div>
 
-        <div className="mx-3 mb-4 w-full grid grid-cols-3 divide-x overflow-hidden rounded-xl"
+        <div
+          className="mx-3 mb-4 w-full grid grid-cols-3 divide-x overflow-hidden rounded-xl"
           style={{
             background: "var(--c-cards)",
-            border: "1px solid var(--c-border)"
+            border: "1px solid var(--c-border)",
           }}
         >
           {stats.map((s) => (
@@ -150,14 +159,16 @@ export default function Sidebar() {
           </p>
         </div>
 
-        <div className="flex w-full flex-col gap-3 px-2 " style={{fontFamily: "DM sans"}}>
+        <div
+          className="flex w-full flex-col gap-3 px-2 "
+          style={{ fontFamily: "DM sans" }}
+        >
           {SECTIONS.map((section) => (
             <NavList
               key={section.title ?? "main"}
               section={section}
               activeItem={activeItem}
               onSelect={setActiveItem}
-              
             />
           ))}
         </div>

@@ -10,7 +10,7 @@ const videoSchema = new mongoose.Schema(
     },
 
     youtubeVideoId: {
-      type: String, 
+      type: String,
       required: true,
     },
 
@@ -20,14 +20,14 @@ const videoSchema = new mongoose.Schema(
     },
 
     thumbnail: {
-      default: { type : String},
-      medium: { type : String},
-      high: { type : String},
+      default: { type: String },
+      medium: { type: String },
+      high: { type: String },
     },
 
     description: {
-      type: String, 
-      default: ""
+      type: String,
+      default: "",
     },
 
     watched: {
@@ -35,15 +35,13 @@ const videoSchema = new mongoose.Schema(
       default: false,
     },
     playbackSpeed: {
-      type: "string", 
-      default: "1"
+      type: "string",
+      default: "1",
     },
     dailyGoals: {
-      type: String, 
-      default: "1.5"
-    }
-    ,
-
+      type: String,
+      default: "1.5",
+    },
     notes: {
       type: String,
       default: "",
@@ -54,14 +52,9 @@ const videoSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
+videoSchema.index({ playlistId: 1, youtubeVideoId: 1 }, { unique: true });
 
-videoSchema.index(
-  { playlistId: 1, videoId: 1 },
-  { unique: true }
-);
-
-
-export const Video =  mongoose.model("Video", videoSchema);
+export const Video = mongoose.model("Video", videoSchema);

@@ -7,7 +7,7 @@ type Props = {
 const MainContainer = ({children}: Props) => {
 
   return (
-    <div className='w-full shrink-0 bg-(--light-bg) font-sans' style={{width: "calc(100% - 320px)"}}>
+    <div className='w-full h-full overflow-y-auto scroll-smooth shrink-0 bg-(--light-bg) font-sans' style={{width: "calc(100% - 320px)" , scrollbarWidth: "thin"}}>
       {children}
     </div>
   )
