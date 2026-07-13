@@ -4,9 +4,9 @@ import verifyToken from "../middleware/auth.js";
 
 const router = express.Router(); 
 
-router.get("/", verifyToken, playlistControllers.getAllUserPlaylists);
-router.post("/add", verifyToken, playlistControllers.importPlaylistDetailsFromYT);
-router.delete("/delete/:playlistId", verifyToken, playlistControllers.deletedPlaylist);
+router.get("/playlists", verifyToken, playlistControllers.getAllUserPlaylists);
+router.post("/playlists", verifyToken, playlistControllers.importPlaylistDetailsFromYT);
+router.delete("/playlists/:playlistId", verifyToken, playlistControllers.deletedPlaylist);
 
 
 export default router; 

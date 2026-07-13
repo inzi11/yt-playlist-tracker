@@ -8,14 +8,17 @@ import { Theme } from './context/ThemeProvider/Theme.tsx';
 import { CssBaseline } from '@mui/material'
 import { Provider } from 'react-redux'
 import { store } from './store/store.tsx'
+import { AuthProvider } from './context/AuthProvider/AuthProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-    <ThemeProvider theme={Theme}>
-      <CssBaseline />
-    <App />
-    </ThemeProvider>
+      <ThemeProvider theme={Theme}>
+        <CssBaseline />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ThemeProvider>
     </Provider>
   </StrictMode>,
 )

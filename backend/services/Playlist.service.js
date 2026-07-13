@@ -1,65 +1,78 @@
 import PlaylistRepository from "../repository/Playlist.repository.js";
 import AppError from "../utils/appError.utils.js";
-import YoutubeService from "./Youtube.service.js"
-
+import YoutubeService from "./Youtube.service.js";
+import VideoService from "./Video.service.js";
 
 // payload = {url, customTitle, category, daily goals, playback Speed}
 const importPlaylist = async (payload, userId) => {
-    const playlistId = YoutubeService.getPlaylistId(payload?.url);
+  const ytPlaylistId = YoutubeService.getPlaylistId(payload?.url);
 
-    const isPlaylistExists = await PlaylistRepository.checkPlaylistExistance(playlistId, userId);
+  const isPlaylistExists = await PlaylistRepository.checkPlaylistExistance(
+    ytPlaylistId,
+    userId,
+  );
 
-    if (isPlaylistExists) {
-        throw new AppError("playlist Already Exists", 409);
-    }
+  if (isPlaylistExists) {
+    throw new AppError("playlist Already Exists", 409);
+  }
 
-    const ytResponse = await YoutubeService.getPlaylistData(playlistId);
+  const ytResponse = await YoutubeService.getPlaylistData(ytPlaylistId);
 
-    // if (!ytResponse) {
-    //     console.log("No playlist found")
-    //     throw new AppError("No Playlsit found", 404)
-    // }
+  // if (!ytResponse) {
+  //     console.log("No playlist found")
+  //     throw new AppError("No Playlsit found", 404)
+  // }
 
-    if (!ytResponse || !ytResponse.items || ytResponse.items.length === 0) {
+  if (!ytResponse || !ytResponse.items || ytResponse.items.length === 0) {
     throw new AppError("Playlist not found on YouTube", 404);
-    }
+  }
 
-    console.log(ytResponse);
+  console.log(ytResponse);
 
-    const playlistDetails = ytResponse.items[0];
+  const playlistDetails = ytResponse.items[0];
 
-    const playlistPayload = {
-        userId: userId,
-         youtubePlaylistId: playlistId,
-         title: payload.customTitle || playlistDetails?.snippet.title, 
-        itemCount: playlistDetails?.contentDetails.itemCount,
-        category: payload.category, 
-         thumbnail: playlistDetails?.snippet.thumbnails,
-        description: playlistDetails?.snippet.localized.description
-    }
+  const playlistPayload = {
+    userId: userId,
+    youtubePlaylistId: ytPlaylistId,
+    title: payload.customTitle || playlistDetails?.snippet.title,
+    itemCount: playlistDetails?.contentDetails.itemCount,
+    category: payload.category,
+    thumbnail: playlistDetails?.snippet.thumbnails,
+    description: playlistDetails?.snippet.localized.description,
+  };
 
-    const createdPlaylist = await PlaylistRepository.createNewPlaylist(playlistPayload); 
+  const createdPlaylist =
+    await PlaylistRepository.createNewPlaylist(playlistPayload);
 
-    return createdPlaylist;
-}
+  try {
+    await VideoService.importVideos(createdPlaylist._id, ytPlaylistId, userId);
+  } catch (error) {
+    console.error("Failed to import videos:", error);
+    await PlaylistRepository.deletePlaylistById(createdPlaylist._id, userId);
+
+    throw error;
+  }
+
+  return createdPlaylist;
+};
 
 const findPlaylists = async (userId) => {
-    const allPlaylist = await PlaylistRepository.getAllPlaylist(userId);
+  const allPlaylist = await PlaylistRepository.getAllPlaylist(userId);
 
-    return allPlaylist; 
-}
+  return allPlaylist;
+};
 
 const deleteSinglePlaylist = async (playlistId, userId) => {
+  const deletePlaylist = await PlaylistRepository.deletePlaylistById(
+    playlistId,
+    userId,
+  );
 
-    const deletePlaylist = await PlaylistRepository.deletePlaylistById(playlistId, userId) // again remember im not deleting the videos store only the playlist (have to map db both sides?)
+  if (deletePlaylist.deletedCount === 0) {
+    throw new AppError("Error in deleting the playlist", 409);
+  }
 
-    if (deletePlaylist.deletedCount === 0) {
-        throw new AppError("Error in deleting the playlist", 409)
-    }
+  return deletePlaylist;
+};
 
-    return deletePlaylist;
-
-}
-
-
-export default {importPlaylist, findPlaylists , deleteSinglePlaylist}
+export default { importPlaylist, findPlaylists, deleteSinglePlaylist };
